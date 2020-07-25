@@ -44,14 +44,15 @@ public class Login {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                
-                if(idTxt.getText().equals(id)) {
-                    if(password.equals(new String(passwordTxt.getPassword()))) {
-                        panel.setVisible(false);
-                        PosApp.receiptPanel.setVisible(true);
+                if(check()) {
+                    if(idTxt.getText().equals(id)) {
+                        if(password.equals(new String(passwordTxt.getPassword()))) {
+                            panel.setVisible(false);
+                            PosApp.receiptPanel.setVisible(true);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호가 일치하지 않습니다.");
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호가 일치하지 않습니다.");
                 }
                 
             }
@@ -67,5 +68,20 @@ public class Login {
         lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
         lblPassword.setBounds(102, 418, 161, 70);
         panel.add(lblPassword);
+    }
+    
+    private boolean check() {
+        boolean check = false;
+        if(idTxt.getText().length() < 1) {
+            JOptionPane.showMessageDialog(null, "아이디를 입력해주세요!");
+            idTxt.requestFocus();
+        } else if((new String(passwordTxt.getPassword())).length() < 1) {
+            JOptionPane.showMessageDialog(null, "비밀번호를 입력해주세요!");
+            passwordTxt.requestFocus();
+        } else {
+            check = true;
+        }
+        
+        return check;
     }
 }

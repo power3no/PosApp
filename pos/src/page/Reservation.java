@@ -29,6 +29,7 @@ public class Reservation extends BasicInterface{
     JTextField employeeTxt;
     JTextField customerTxt;
     JComboBox comboBox;
+    JButton insertBtn;
     
     public Reservation(JPanel panel) {
         super(panel);
@@ -40,7 +41,7 @@ public class Reservation extends BasicInterface{
         scrollPane.setBounds(25, 60, 756, 345);
         panel.add(scrollPane);
         
-        JButton insertBtn = new JButton("예약등록");
+        insertBtn = new JButton("예약등록");
         insertBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
         insertBtn.setBounds(639, 417, 142, 53);
         panel.add(insertBtn);
@@ -79,32 +80,52 @@ public class Reservation extends BasicInterface{
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean overlap = false;
-                int row = 0;
-                // 담당자 중복 체크
-                for(int i = 0; i < model.getRowCount(); i++) {
-                    if(employeeTxt.getText().equals(model.getValueAt(i, 0))) {
-                        overlap = true;
-                        row = i;
-                    } 
-                }
                 
-                if(overlap) {
-                    model.setValueAt(customerTxt.getText(), row, comboBox.getSelectedIndex()+1);
-                } else {
-                    ArrayList<String> list = new ArrayList<String>();
-                    list.add(employeeTxt.getText());
-                    for(int i = 0; i < comboBox.getSelectedIndex(); i++) {
-                        list.add("");
+                if(check()) {
+                    boolean overlap = false;
+                    int row = 0;
+                    // 담당자 중복 체크
+                    for(int i = 0; i < model.getRowCount(); i++) {
+                        if(employeeTxt.getText().equals(model.getValueAt(i, 0))) {
+                            overlap = true;
+                            row = i;
+                        } 
                     }
-                    list.add(customerTxt.getText());
-                    String[] rowData = list.toArray(new String[list.size()]);
-                    model.addRow(rowData);
-                }
-                JOptionPane.showMessageDialog(panel, "예약 완료!");
-                employeeTxt.setText("");
-                customerTxt.setText("");
+                    
+                    if(overlap) {
+                        model.setValueAt(customerTxt.getText(), row, comboBox.getSelectedIndex()+1);
+                    } else {
+                        ArrayList<String> list = new ArrayList<String>();
+                        list.add(employeeTxt.getText());
+                        for(int i = 0; i < comboBox.getSelectedIndex(); i++) {
+                            list.add("");
+                        }
+                        list.add(customerTxt.getText());
+                        String[] rowData = list.toArray(new String[list.size()]);
+                        model.addRow(rowData);
+                    }
+                    JOptionPane.showMessageDialog(panel, "예약 완료!");
+                    employeeTxt.setText("");
+                    customerTxt.setText("");
+                } 
+                
+              
             }
         });
+    }
+    
+    private boolean check() {
+        boolean check = false;
+        if(employeeTxt.getText().length() < 1) {
+            JOptionPane.showMessageDialog(null, "담당자를 입력해 주세요!");
+            employeeTxt.requestFocus();
+        }
+        else if(customerTxt.getText().length() < 1) {
+            JOptionPane.showMessageDialog(null, "고객명을 입력해 주세요!");
+            customerTxt.requestFocus();
+        } else {
+            check = true;
+        }
+        return check;
     }
 }
